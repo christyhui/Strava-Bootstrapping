@@ -14,13 +14,11 @@ The purpose of this project is three-fold:
 
 
 
-DataCollection.ipynb is focused on the collection of the data (done correctly with tokens correctly sealed away). 
+DataCollection.ipynb is focused on the collection of the data (done correctly with tokens sealed away).
 
 stravaTokenManager.py contains a helper function that enables the DataCollection.ipynb to work. The function in this .py file refreshes all tokens in the .env file.
 
 UnderstandingBootstrappingWithStravaRunData.ipynb is focused on purposes (2) and (3).
 
-
-
-The dashboard app code is under app.py. It is being externally hosted under Render.
+app.py is the app and complements UnderstandingBootstrappingWithStravaRunData.ipynb. It's sole purpose is to run the dashboard for (3).
 
