@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import os
 import plotly.graph_objects as go
 from dash import Dash, html, dcc, Input, Output
 
@@ -21,7 +21,7 @@ f2_runs = df[(df['friendNum'] == 2) & (df['type'] == 'Run')]
 def bootstrap_mean(data, n_boot=1000):
     means = []  # initialize empty array to store means
     for _ in range(n_boot):  # repeat process many times
-        sample = np.random.choice(data, size=len(data), replace=True)  # randomly sample dataset with replacement
+        sample = np.random.choice(data, size = len(data), replace = True)  # randomly sample dataset with replacement
         means.append(np.mean(sample))  # compute statistic of interest and store mean in array
 
     return np.array(means)
@@ -35,8 +35,8 @@ app = Dash(__name__)
 
 app.layout = html.Div([
 
-    dcc.Store(id="store-my-runs", data=my_runs.to_dict("records")),
-    dcc.Store(id="store-f2-runs", data=f2_runs.to_dict("records")),
+    dcc.Store(id = "store-my-runs", data = my_runs.to_dict("records")),
+    dcc.Store(id = "store-f2-runs", data = f2_runs.to_dict("records")),
 
     html.H2("Bootstrap Resampling Demo"),
 
@@ -49,26 +49,26 @@ app.layout = html.Div([
     html.Br(),
     html.Label("Confidence Level (%):"),
     dcc.Dropdown(
-        id="ci-level",
-        options=[
+        id = "ci-level",
+        options = [
             {"label": "90%", "value": 90},
             {"label": "95%", "value": 95},
             {"label": "99%", "value": 99}
         ],
-        value=95,
-        clearable=False,
-        style={"width": "200px", "marginTop": "5px"}
+        value = 95,
+        clearable = False,
+        style = {"width": "200px", "marginTop": "5px"}
     ),
 
     html.Button("Generate", id="bootstrap-button", style={"marginTop": "10px"}),
 
-    html.Div(id="stats-text", style={"whiteSpace": "pre-line", "marginTop": "15px", "fontSize": "16px"}),
+    html.Div(id = "stats-text", style = {"whiteSpace": "pre-line", "marginTop": "15px", "fontSize": "16px"}),
 
     html.Div([
-        dcc.Graph(id="bootstrap-hist-runs", style={"width": "100%", "height": "500px"}),
-        dcc.Graph(id="bootstrap-hist-null", style={"width": "100%", "height": "500px"})
+        dcc.Graph(id = "bootstrap-hist-runs", style = {"width": "100%", "height": "500px"}),
+        dcc.Graph(id = "bootstrap-hist-null", style = {"width": "100%", "height": "500px"})
     ])
-], style={"maxWidth": "1200px", "margin": "auto"})
+], style = {"maxWidth": "1200px", "margin": "auto"})
 @app.callback(
     [
         Output("bootstrap-hist-runs", "figure"),
@@ -123,25 +123,25 @@ def update_bootstrap(n_clicks, n_boot, ci_level, my_data, f2_data):
 
     # --- Figure 1: Bootstrap means
     fig_runs = go.Figure()
-    fig_runs.add_trace(go.Histogram(x=f2_means, nbinsx=30, name="Friend's Runs", opacity=0.6))
-    fig_runs.add_trace(go.Histogram(x=my_means, nbinsx=30, name="My Runs", opacity=0.6, marker_color="orangered"))
+    fig_runs.add_trace(go.Histogram(x = f2_means, nbinsx = 30, name = "Friend's Runs", opacity = 0.6))
+    fig_runs.add_trace(go.Histogram(x = my_means, nbinsx = 30, name = "My Runs", opacity = 0.6, marker_color = "orangered"))
 
-    fig_runs.add_vline(x=f2_orig, line=dict(color="darkblue", dash="dash"))
-    fig_runs.add_vline(x=my_orig, line=dict(color="darkred", dash="dash"))
+    fig_runs.add_vline(x = f2_orig, line = dict(color = "darkblue", dash = "dash"))
+    fig_runs.add_vline(x = my_orig, line = dict(color = "darkred", dash = "dash"))
 
-    fig_runs.add_vline(x=f2_ci_lower, line=dict(dash="dot"))
-    fig_runs.add_vline(x=f2_ci_upper, line=dict(dash="dot"))
+    fig_runs.add_vline(x = f2_ci_lower, line = dict(dash="dot"))
+    fig_runs.add_vline(x = f2_ci_upper, line = dict(dash="dot"))
 
-    fig_runs.add_vline(x=my_ci_lower, line=dict(color="orangered", dash="dot"))
-    fig_runs.add_vline(x=my_ci_upper, line=dict(color="orangered", dash="dot"))
+    fig_runs.add_vline(x = my_ci_lower, line = dict(color = "orangered", dash = "dot"))
+    fig_runs.add_vline(x = my_ci_upper, line = dict(color = "orangered", dash = "dot"))
 
     fig_runs.update_layout(
-        barmode="overlay",
-        title="Bootstrap Means: My Runs vs Friend's Runs",
-        xaxis_title="Mean Average Speed",
-        yaxis_title="Count",
-        height=500,
-        legend=dict(x=0.01, y=0.99)
+        barmode = "overlay",
+        title = "Bootstrap Means: My Runs vs Friend's Runs",
+        xaxis_title = "Mean Average Speed",
+        yaxis_title = "Count",
+        height = 500,
+        legend = dict(x=0.01, y=0.99)
     )
 
 
@@ -150,17 +150,17 @@ def update_bootstrap(n_clicks, n_boot, ci_level, my_data, f2_data):
     # --- Figure 2: Null distribution
     fig_null = go.Figure()
     fig_null.add_trace \
-        (go.Histogram(x=null_diffs, nbinsx=30, name="Null Differences", marker_color="purple", opacity=0.6))
+        (go.Histogram(x = null_diffs, nbinsx = 30, name = "Null Differences", marker_color = "purple", opacity = 0.6))
 
-    fig_null.add_vline(x=null_ci_lower, line=dict(color="gray", dash="dot"))
-    fig_null.add_vline(x=null_ci_upper, line=dict(color="gray", dash="dot"))
+    fig_null.add_vline(x = null_ci_lower, line = dict(color = "gray", dash = "dot"))
+    fig_null.add_vline(x = null_ci_upper, line = dict(color = "gray", dash = "dot"))
 
     fig_null.update_layout(
-        title="Null Distribution (Assuming No Difference)",
-        xaxis_title="Mean Difference Under Null",
-        yaxis_title="Count",
-        height=500,
-        legend=dict(x=0.01, y=0.99)
+        title = "Null Distribution (Assuming No Difference)",
+        xaxis_title = "Mean Difference Under Null",
+        yaxis_title = "Count",
+        height = 500,
+        legend = dict(x=0.01, y=0.99)
     )
 
     # --- Stats text
@@ -179,5 +179,7 @@ def update_bootstrap(n_clicks, n_boot, ci_level, my_data, f2_data):
 
     return fig_runs, fig_null, stats
 
+port = int(os.environ.get("PORT", 8050))
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host = "0.0.0.0", port = port)
